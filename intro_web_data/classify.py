@@ -31,6 +31,7 @@ class NaiveBayesClassifier(object):
         
         p = 1
         for feature in features:
+            #
             print "%s - %s - %s" % (feature, category, self.weighted_prob(feature, category))
             p *= self.weighted_prob(feature, category)
             
@@ -106,7 +107,7 @@ class NaiveBayesClassifier(object):
         self.increment_cat(category)
 
 if __name__ == '__main__':
-    labels = ['arts', 'sports'] # these are the categories we want
+    labels = ['arts','automobiles','blogs','books','booming','business','cars','culture','dining','fashion','financial','food','society','sports','style','technology']
     data = {}
     for label in labels:
         f = open(label, 'r')
@@ -116,7 +117,19 @@ if __name__ == '__main__':
 
     nb = NaiveBayesClassifier()
     nb.train_from_data(data)
-    print nb.probability("Early Friday afternoon, the lead negotiators for the N.B.A. and the players union will hold a bargaining session in Beverly Hills — the latest attempt to break a 12-month stalemate on a new labor deal.", 'arts')
-    print nb.probability("Early Friday afternoon, the lead negotiators for the N.B.A. and the players union will hold a bargaining session in Beverly Hills — the latest attempt to break a 12-month stalemate on a new labor deal.", 'sports')
+
+    print "Classifier"
+    sentence = raw_input("Enter your sentence(s): ")
+
+    p = {}
+    p_winner = ''
+
+    for label in labels:
+        p_winner = label
+        p[label] = nb.probability(sentence, label)
+        p_winner = label if p[label] > p[p_winner] else p_winner
+        print "The probability that your sentence is %s is %s." % (label, p[label])
+
+    print "Therefore, we believe it is %s." % (p_winner)
 
 
